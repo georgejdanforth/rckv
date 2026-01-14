@@ -1,9 +1,11 @@
 package main
 
 import (
-	"net/http"
 	"log"
 	"log/slog"
+	"net/http"
+
+	"github.com/georgejdanforth/rckv/kv"
 )
 
 func logMiddleware(next http.Handler) http.Handler {
@@ -14,7 +16,8 @@ func logMiddleware(next http.Handler) http.Handler {
 }
 
 func main() {
-	server := NewServer(nil)
+	kvStore := kv.NewMemoryStore()
+	server := NewServer(kvStore)
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("GET /get", server.HandleGet)
